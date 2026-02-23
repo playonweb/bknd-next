@@ -1,0 +1,117 @@
+{
+  "statistics": {
+    "detectionDate": "2026-02-23T22:07:33.766Z",
+    "formats": {
+      "css": {
+        "sources": {
+          "/Users/rahul/Desktop/playground/bknd/frontend/src/style.css": {
+            "lines": 34,
+            "tokens": 293,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 34,
+          "tokens": 293,
+          "sources": 1,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "typescript": {
+        "sources": {
+          "/Users/rahul/Desktop/playground/bknd/frontend/src/main.ts": {
+            "lines": 4,
+            "tokens": 33,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/rahul/Desktop/playground/bknd/frontend/src/bknd.ts": {
+            "lines": 4,
+            "tokens": 47,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 8,
+          "tokens": 80,
+          "sources": 2,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "markup": {
+        "sources": {
+          "/Users/rahul/Desktop/playground/bknd/frontend/src/App.vue": {
+            "lines": 148,
+            "tokens": 1002,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 148,
+          "tokens": 1002,
+          "sources": 1,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      }
+    },
+    "total": {
+      "lines": 190,
+      "tokens": 1375,
+      "sources": 4,
+      "clones": 0,
+      "duplicatedLines": 0,
+      "duplicatedTokens": 0,
+      "percentage": 0,
+      "percentageTokens": 0,
+      "newDuplicatedLines": 0,
+      "newClones": 0
+    }
+  },
+  "duplicates": [],
+  "filename": "/Users/rahul/Desktop/playground/bknd/node_modules/.pnpm/@jscpd+html-reporter@4.0.4/node_modules/@jscpd/html-reporter/dist/templates/main.pug"
+}

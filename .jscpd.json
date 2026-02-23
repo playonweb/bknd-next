@@ -1,0 +1,13 @@
+{
+    "threshold": 3,
+    "reporters": [
+        "html",
+        "console"
+    ],
+    "ignore": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/.git/**"
+    ],
+    "absolute": true
+}

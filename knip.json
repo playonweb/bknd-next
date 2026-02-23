@@ -1,0 +1,32 @@
+{
+    "workspaces": {
+        "frontend": {
+            "entry": [
+                "src/main.ts",
+                "vite.config.ts"
+            ],
+            "project": [
+                "src/**/*.ts",
+                "src/**/*.vue"
+            ]
+        },
+        "backend": {
+            "entry": "index.js",
+            "project": "**/*.js"
+        }
+    },
+    "ignoreDependencies": [
+        "@hono/node-server",
+        "tailwindcss",
+        "@ast-grep/cli",
+        "concurrently",
+        "jscpd",
+        "knip"
+    ],
+    "ignoreBinaries": [
+        "task",
+        "dev",
+        "build",
+        "vue-tsc"
+    ]
+}

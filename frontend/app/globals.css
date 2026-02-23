@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  /* Neumorphism Base Variables */
+  --color-neu-bg: #e0e5ec;
+  --color-neu-light: #ffffff;
+  --color-neu-dark: #a3b1c6;
+  --color-neu-text: #4a5568;
+}
+
+@layer utilities {
+  .neu-flat {
+    background-color: var(--color-neu-bg);
+    box-shadow: 9px 9px 16px var(--color-neu-dark), -9px -9px 16px var(--color-neu-light);
+  }
+
+  .neu-pressed {
+    background-color: var(--color-neu-bg);
+    box-shadow: inset 6px 6px 10px 0 var(--color-neu-dark), inset -6px -6px 10px 0 var(--color-neu-light);
+  }
+
+  .neu-convex {
+    background: linear-gradient(145deg, #f0f5fc, #caced4);
+    box-shadow: 9px 9px 16px var(--color-neu-dark), -9px -9px 16px var(--color-neu-light);
+  }
+
+  .neu-concave {
+    background: linear-gradient(145deg, #caced4, #f0f5fc);
+    box-shadow: 9px 9px 16px var(--color-neu-dark), -9px -9px 16px var(--color-neu-light);
+  }
+}
+
+body {
+  background-color: var(--color-neu-bg);
+  color: var(--color-neu-text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}

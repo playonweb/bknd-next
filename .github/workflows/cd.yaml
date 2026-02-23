@@ -1,0 +1,19 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Example deployment steps (Adjust based on targeted platform like Vercel, Netlify, Railway, etc.)
+    - name: Deploy Frontend (Placeholder)
+      run: echo "Deploying frontend to CDN"
+      
+    - name: Deploy Backend (Placeholder)
+      run: echo "Deploying bknd backend to runtime environment"

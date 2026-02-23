@@ -1,0 +1,11 @@
+ruleDirs:
+  - rules
+testConfigs:
+  - testDir: rules
+languageGlobs:
+  javascript:
+    - "*.js"
+  typescript:
+    - "*.ts"
+  vue:
+    - "*.vue"

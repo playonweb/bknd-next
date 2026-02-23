@@ -1,0 +1,39 @@
+version: '3'
+
+vars:
+  FRONTEND_DIR: frontend
+  BACKEND_DIR: backend
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  install:
+    desc: Install dependencies for frontend
+    cmds:
+      - pnpm install
+      - cd {{.FRONTEND_DIR}} && pnpm install
+
+  dev:
+    desc: Run hybrid Next.js development server
+    cmds:
+      - cd {{.FRONTEND_DIR}} && npm run dev
+
+  build:
+    desc: Build frontend and backend output
+    cmds:
+      - cd {{.FRONTEND_DIR}} && npm run build
+
+  typecheck:
+    desc: Run TypeScript compilation/type checking
+    cmds:
+      - cd {{.FRONTEND_DIR}} && pnpm vue-tsc --noEmit
+
+  lint:
+    desc: Run linters (knip, jscpd, ast-grep)
+    cmds:
+      - npx knip
+      - npx jscpd frontend/src
+      - ast-grep scan
