@@ -2,18 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { bknd } from '@/lib/bknd';
-
-interface Todo {
-  id: string;
-  title: string;
-  completed: boolean;
-}
+import { Todo } from '@/lib/types';
+import { TodoItem } from '@/components/TodoItem';
+import { TodoInput } from '@/components/TodoInput';
 
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodoTitle, setNewTodoTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -34,13 +29,11 @@ export default function Home() {
     fetchTodos();
   }, []);
 
-  const addTodo = async () => {
-    if (!newTodoTitle.trim()) return;
+  const addTodo = async (title: string) => {
     const tempId = Date.now().toString();
-    const todo: Todo = { id: tempId, title: newTodoTitle, completed: false };
+    const todo: Todo = { id: tempId, title, completed: false };
     
     setTodos((prev) => [...prev, todo]);
-    setNewTodoTitle('');
 
     try {
       const res = await bknd.data.post<any>('/collections/todos/records', { 
@@ -90,25 +83,8 @@ export default function Home() {
           Neu ToDo
         </h1>
 
-        {/* Input Section */}
-        <div className="flex gap-4">
-          <input 
-            value={newTodoTitle} 
-            onChange={(e) => setNewTodoTitle(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && addTodo()}
-            className="neu-pressed w-full rounded-full px-6 py-4 outline-none focus:ring-2 focus:ring-[#a3b1c6] transition-all bg-transparent text-[#4a5568]"
-            placeholder="What needs to be done?" 
-            type="text" 
-          />
-          <button 
-            onClick={addTodo}
-            className="neu-flat rounded-full w-14 h-14 flex items-center justify-center hover:neu-convex active:neu-pressed transition-all shrink-0 text-xl font-bold text-[#4a5568]"
-          >
-            +
-          </button>
-        </div>
+        <TodoInput onAdd={addTodo} />
 
-        {/* List Section */}
         <ul className="flex flex-col gap-4 mt-6">
           {isLoading && (
             <li className="text-center italic opacity-70 text-[#4a5568]">
@@ -123,34 +99,12 @@ export default function Home() {
           )}
 
           {todos.map(todo => (
-            <li 
-              key={todo.id}
-              className="neu-flat rounded-2xl p-4 flex items-center justify-between gap-4 transition-all hover:-translate-y-1"
-            >
-              <div className="flex items-center gap-4 flex-1">
-                <button 
-                  onClick={() => toggleTodo(todo)}
-                  className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all border-2 border-transparent ${
-                    todo.completed ? 'neu-pressed text-green-500 border-green-400' : 'neu-convex text-transparent border-[#a3b1c6]'
-                  }`}
-                >
-                  ✓
-                </button>
-                <span 
-                  className={`font-medium text-lg truncate transition-all text-[#4a5568] ${
-                    todo.completed ? 'line-through opacity-50' : ''
-                  }`}
-                >
-                  {todo.title}
-                </span>
-              </div>
-              <button 
-                onClick={() => deleteTodo(todo.id)}
-                className="text-red-400 opacity-60 hover:opacity-100 hover:text-red-500 transition-all text-xl pr-2"
-              >
-                ×
-              </button>
-            </li>
+            <TodoItem 
+              key={todo.id} 
+              todo={todo} 
+              onToggle={toggleTodo} 
+              onDelete={deleteTodo} 
+            />
           ))}
         </ul>
       </div>

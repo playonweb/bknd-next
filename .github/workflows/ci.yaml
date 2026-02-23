@@ -7,7 +7,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-lint:
+  quality:
+    name: "Quality Assurance"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,17 +27,20 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Install Frontend
-      run: cd frontend && pnpm install
-      
-    - name: Install Backend
-      run: cd backend && npm install
+    - name: Lint (ESLint)
+      run: pnpm run lint
 
-    - name: Lint (jscpd, knip, ast-grep)
-      run: pnpm run lint || true
+    - name: Duplicate Code Detection (jscpd)
+      run: pnpm run jscpd
+
+    - name: Unused Code Analysis (knip)
+      run: pnpm run knip
+
+    - name: AST Validation (ast-grep)
+      run: pnpm run ast-grep
 
     - name: Typecheck
-      run: pnpm run typecheck || true
+      run: pnpm run typecheck
 
-    - name: Build Projects
+    - name: Build (Next.js)
       run: pnpm run build

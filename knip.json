@@ -1,32 +1,17 @@
 {
-    "workspaces": {
-        "frontend": {
-            "entry": [
-                "src/main.ts",
-                "vite.config.ts"
-            ],
-            "project": [
-                "src/**/*.ts",
-                "src/**/*.vue"
-            ]
-        },
-        "backend": {
-            "entry": "index.js",
-            "project": "**/*.js"
-        }
-    },
-    "ignoreDependencies": [
-        "@hono/node-server",
-        "tailwindcss",
-        "@ast-grep/cli",
-        "concurrently",
-        "jscpd",
-        "knip"
+    "$schema": "https://unpkg.com/knip@5/schema.json",
+    "entry": [
+        "app/layout.tsx",
+        "app/page.tsx",
+        "app/api/[...catchall]/route.ts",
+        "next.config.ts"
     ],
-    "ignoreBinaries": [
-        "task",
-        "dev",
-        "build",
-        "vue-tsc"
+    "project": [
+        "**/*.{js,jsx,ts,tsx}"
+    ],
+    "ignoreDependencies": [
+        "tailwindcss",
+        "@tailwindcss/postcss",
+        "eslint-config-next"
     ]
 }

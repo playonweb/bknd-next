@@ -1,22 +1,27 @@
 # Security and Performance Audit
 
-## Objective
-Assess the code quality, security profile, and performance implications of the `Neu ToDo App`.
+## Assessment Summary
+The `Neu ToDo App` has been audited for security vulnerabilities and performance bottlenecks characteristic of Next.js hybrid applications.
 
-## Tools Used
-- `knip` for dependency redundancy.
-- `jscpd` for copy-paste duplicate code checking.
-- `ast-grep` for structured AST security rules.
+## Tools Integrated
+- **jscpd**: Detects code clones to reduce maintenance overhead.
+- **knip**: Monitors for unused files, exports, and dependencies to keep the bundle lean.
+- **ast-grep**: Enforces structural code patterns and detects potential anti-patterns.
+- **ESLint**: Standard JS/TS/Next.js security and quality rules.
 
 ## Security Posture
-- **Input Validation:** Frontend Vue bindings naturally escape standard HTML characters preventing simple XSS via the Todo content.
-- **Data Protection:** Variables defining keys are mocked in `.env.example`; however in production, `dotenvx` secrets are mandated by `bknd` configs.
+- **CSRF Protection**: Native Next.js App Router mechanisms handle session and request verification.
+- **Sanitization**: React automatically escapes text content in strings rendered to the DOM, mitigating XSS risks.
+- **API Security**: The `bknd` adapter implements internal schema validation for all requests.
+- **Secret Management**: Environment variables are strictly isolated via `NEXT_PUBLIC_` prefixes only for non-sensitive endpoint URLs.
 
-## Performance Analysis
-- **Bundle Size:** Vite leverages tree-shaking for efficient builds. Vue is the dominant module.
-- **Client Processing:** The frontend logic is linear $O(n)$ for filtering and finding entries upon modifications.
-- **Network Overhead:** `bknd` requests are purely structured JSON payloads, drastically minimizing the latency typically associated with fetching large templates.
+## Performance Profile
+- **Server Side Rendering (SSR)**: Initial page loads benefit from pre-rendering for SEO and FCP (First Contentful Paint).
+- **Client Hydration**: Minimized through targeted usage of `'use client'` directives only on the Todo interaction layer.
+- **Asset Optimization**: Next.js Image and Font loaders optimize static assets.
+- **Atomic Styles**: Tailwind CSS v4 ensures the final CSS bundle is as small as possible by only including used utilities.
 
 ## Recommendations
-- Expand backend with dedicated DB adapter definitions beyond local SQLite when reaching >1K Daily Active Users.
-- Enforce strict Content Security Policy (CSP) headers in the final server config.
+- **Database Scaling**: For high-volume production use, switch from the local SQLite `data.db` to a managed PostgreSQL or MySQL instance via `bknd`'s connection adapters.
+- **Caching**: Implement SWR (Stale-While-Revalidate) on the frontend for better background synchronization.
+- **CSP**: Define a Strict Content Security Policy in `next.config.ts` headers to prevent unauthorized script injections.

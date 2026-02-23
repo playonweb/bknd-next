@@ -1,9 +1,5 @@
 version: '3'
 
-vars:
-  FRONTEND_DIR: frontend
-  BACKEND_DIR: backend
-
 tasks:
   default:
     cmds:
@@ -11,29 +7,37 @@ tasks:
     silent: true
 
   install:
-    desc: Install dependencies for frontend
+    desc: Install dependencies
     cmds:
       - pnpm install
-      - cd {{.FRONTEND_DIR}} && pnpm install
 
   dev:
-    desc: Run hybrid Next.js development server
+    desc: Run Next.js development server
     cmds:
-      - cd {{.FRONTEND_DIR}} && npm run dev
+      - pnpm run dev
 
   build:
-    desc: Build frontend and backend output
+    desc: Build production bundle
     cmds:
-      - cd {{.FRONTEND_DIR}} && npm run build
+      - pnpm run build
 
   typecheck:
-    desc: Run TypeScript compilation/type checking
+    desc: Run TypeScript type checking
     cmds:
-      - cd {{.FRONTEND_DIR}} && pnpm vue-tsc --noEmit
+      - pnpm run typecheck
 
   lint:
-    desc: Run linters (knip, jscpd, ast-grep)
+    desc: Run quality checks (eslint, knip, jscpd, ast-grep)
     cmds:
-      - npx knip
-      - npx jscpd frontend/src
-      - ast-grep scan
+      - pnpm run lint
+      - pnpm run knip
+      - pnpm run jscpd
+      - pnpm run ast-grep
+
+  report:
+    desc: Generate a full quality report
+    cmds:
+      - mkdir -p report
+      - pnpm run jscpd > report/jscpd.txt
+      - pnpm run knip > report/knip.txt
+      - pnpm run ast-grep > report/ast-grep.txt

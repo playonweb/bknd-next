@@ -6,14 +6,30 @@ on:
 
 jobs:
   deploy:
+    name: "Production Deployment"
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
     
-    # Example deployment steps (Adjust based on targeted platform like Vercel, Netlify, Railway, etc.)
-    - name: Deploy Frontend (Placeholder)
-      run: echo "Deploying frontend to CDN"
+    - name: Enable Corepack & Install pnpm
+      run: |
+        corepack enable
+        corepack prepare pnpm@latest --activate
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build Next.js app
+      run: pnpm run build
       
-    - name: Deploy Backend (Placeholder)
-      run: echo "Deploying bknd backend to runtime environment"
+    - name: Deploy (Placeholder)
+      run: |
+        echo "🚀 Ready to deploy Next.js bundle to Vercel/Cloudflare..."
+        # Example: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
