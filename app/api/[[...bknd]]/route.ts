@@ -1,11 +1,14 @@
-import { serve } from 'bknd/adapter/nextjs';
-import type { App } from 'bknd';
-import { secureRandomString } from "bknd/utils";
+import { config } from "@/lib/bknd";
+import { serve } from "bknd/adapter/nextjs";
+import type { App } from "bknd";
 
-const config: any = {
-    // Runtime hook to create initial admin if missing
+// optionally, you can set the runtime to edge for better performance
+// export const runtime = "edge";
+
+const handler = serve({
+    ...config,
     options: {
-        mode: process.env.NODE_ENV === "development" ? "db" : "code",
+        ...config.options,
         plugins: [
             (app: App) => ({
                 name: "setup-admin",
@@ -32,13 +35,16 @@ const config: any = {
                 }
             })
         ]
-    }
-};
-
-const handler = serve(config);
+    },
+    cleanRequest: {
+        // depending on what name you used for the catch-all route,
+        // you need to change this to clean it from the request.
+        searchParams: ["bknd"],
+    },
+});
 
 export const GET = handler;
 export const POST = handler;
-export const PATCH = handler;
 export const PUT = handler;
+export const PATCH = handler;
 export const DELETE = handler;

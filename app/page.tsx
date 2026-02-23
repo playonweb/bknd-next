@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { bknd } from '@/lib/bknd';
+import { useApi } from 'bknd/client';
 import { Todo } from '@/lib/types';
 import { TodoItem } from '@/components/TodoItem';
 import { TodoInput } from '@/components/TodoInput';
@@ -10,24 +10,30 @@ export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  
+  const bknd = useApi();
 
   useEffect(() => {
     setIsMounted(true);
     const fetchTodos = async () => {
       setIsLoading(true);
       try {
-        const response = await bknd.data.get<any>('/collections/todos/records');
-        if (response && response.items) {
-          setTodos(response.items);
+        const response = await bknd.data.readMany<any>('todos');
+        if (response) {
+          setTodos(response.data || []);
         }
-      } catch (error) {
-        console.warn('Backend not fully configured yet, showing empty list', error);
+      } catch (error: any) {
+        if (error.status === 401 || error.message?.includes('401')) {
+           console.error('Authentication required to access Todos. Please login to the Admin UI.');
+        } else {
+           console.warn('Backend not fully configured yet, showing empty list', error);
+        }
       } finally {
         setIsLoading(false);
       }
     };
     fetchTodos();
-  }, []);
+  }, [bknd]);
 
   const addTodo = async (title: string) => {
     const tempId = Date.now().toString();
@@ -36,13 +42,13 @@ export default function Home() {
     setTodos((prev) => [...prev, todo]);
 
     try {
-      const res = await bknd.data.post<any>('/collections/todos/records', { 
+      const res = await bknd.data.createOne<any>('todos', { 
         title: todo.title, 
         completed: false 
       });
       
-      if (res && res.id) {
-        setTodos((prev) => prev.map(t => t.id === tempId ? { ...t, id: res.id } : t));
+      if (res && res.data?.id) {
+        setTodos((prev) => prev.map(t => t.id === tempId ? { ...t, id: res.data.id } : t));
       }
     } catch (err) {
       console.error('Failed to create todo in bknd:', err);
@@ -54,7 +60,7 @@ export default function Home() {
     setTodos((prev) => prev.map(t => t.id === todo.id ? { ...t, completed: updatedStatus } : t));
     
     try {
-      await bknd.data.patch(`/collections/todos/records/${todo.id}`, { 
+      await bknd.data.updateOne('todos', todo.id, { 
         completed: updatedStatus 
       });
     } catch (err) {
@@ -68,7 +74,7 @@ export default function Home() {
     setTodos((prev) => prev.filter(t => t.id !== id));
     
     try {
-      await bknd.data.delete(`/collections/todos/records/${id}`);
+      await bknd.data.deleteOne('todos', id);
     } catch (err) {
       console.error('Failed to delete todo in bknd', err);
     }
@@ -94,7 +100,7 @@ export default function Home() {
           
           {!isLoading && todos.length === 0 && (
             <li className="text-center italic opacity-70 text-[#4a5568]">
-              No tasks yet. Enjoy your day!
+              No tasks yet, or waiting for Admin Auth. Enjoy your day!
             </li>
           )}
 
@@ -107,6 +113,11 @@ export default function Home() {
             />
           ))}
         </ul>
+        <div className="pt-4 border-t border-gray-300 mt-2 text-center">
+            <a href="/admin" className="text-sm font-medium text-gray-500 hover:text-gray-700 transition">
+                Admin Settings
+            </a>
+        </div>
       </div>
     </div>
   );
