@@ -41,3 +41,9 @@ tasks:
       - pnpm run jscpd > report/jscpd.txt
       - pnpm run knip > report/knip.txt
       - pnpm run ast-grep > report/ast-grep.txt
+
+  deploy:
+    desc: Deploy Next.js to Cloudflare Pages
+    cmds:
+      - npx @cloudflare/next-on-pages
+      - npx wrangler pages deploy .vercel/output/static

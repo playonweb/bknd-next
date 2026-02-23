@@ -1,8 +1,9 @@
 name: CD Pipeline
 
 on:
-  push:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -26,10 +27,12 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Build Next.js app
-      run: pnpm run build
+    - name: Build Next.js app for Cloudflare Pages
+      run: npx @cloudflare/next-on-pages
       
-    - name: Deploy (Placeholder)
-      run: |
-        echo "🚀 Ready to deploy Next.js bundle to Vercel/Cloudflare..."
-        # Example: npx vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+    - name: Deploy to Cloudflare Pages
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: pages deploy .vercel/output/static --project-name="bknd-todo-app"

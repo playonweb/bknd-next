@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@ast-grep/cli": "^0.41.0",
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -30,6 +31,7 @@
     "jscpd": "^4.0.8",
     "knip": "^5.85.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.68.0"
   }
 }

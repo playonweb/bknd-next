@@ -1,8 +1,8 @@
-# System Design: Neu ToDo App
+# System Design: Bknd ToDo App
 
 ## Architecture Overview
 
-The `Neu ToDo App` follows a **Unified Hybrid Architecture** using Next.js 15. This approach merges the frontend UI and the backend services into a single deployable unit.
+The `Bknd ToDo App` follows a **Unified Hybrid Architecture** using Next.js 15. This approach merges the frontend UI and the backend services into a single deployable unit.
 
 ### 1. Unified Layer (Next.js 15)
 - **UI Architecture**: React Client Components using the App Router for fast, optimized rendering.
