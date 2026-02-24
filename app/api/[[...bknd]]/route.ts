@@ -12,25 +12,26 @@ const handler = serve({
         plugins: [
             (app: App) => ({
                 name: "setup-admin",
-                onFirstBoot: async () => {
+                onBoot: async () => {
+                    console.log('[Init] Running setup-admin plugin onBoot...');
                     const adminEmail = process.env.ADMIN_EMAIL || 'admin@admin.com';
                     const adminPassword = process.env.ADMIN_PASSWORD || 'Password123!';
 
                     try {
-                        await app.createUser({
-                            email: adminEmail,
-                            password: adminPassword,
-                            role: 'admin',
-                            verified: true
-                        });
-                        console.log(`[Init] Admin user ${adminEmail} created successfully.`);
-                    } catch (err: any) {
-                        // Usually fails if user already exists
-                        if (err.message && (err.message.includes('exists') || err.message.includes('unique'))) {
-                            console.log(`[Init] Admin user ${adminEmail} already exists.`);
+                        if (typeof app.createUser === 'function') {
+                            console.log(`[Init] Attempting to create admin user ${adminEmail}...`);
+                            await app.createUser({
+                                email: adminEmail,
+                                password: adminPassword,
+                                role: 'admin',
+                                verified: true
+                            });
+                            console.log(`[Init] Admin user ${adminEmail} created successfully.`);
                         } else {
-                            console.warn('[Init] Admin creation ignored/failed:', err.message);
+                            console.warn('[Init] app.createUser is not a function');
                         }
+                    } catch (err: any) {
+                        // creation fails if user already exists
                     }
                 }
             })

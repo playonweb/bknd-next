@@ -9,7 +9,22 @@ export default {
     config: {
         auth: {
             enabled: true,
-            jwt: { secret: process.env.JWT_SECRET || secureRandomString(64) }
+            jwt: { secret: process.env.JWT_SECRET || secureRandomString(64) },
+            default_role_register: "public",
+            roles: {
+                admin: {
+                    implicit_allow: true,
+                },
+                public: {
+                    permissions: [
+                        "data.entity.read",
+                        "data.entity.create",
+                        "data.entity.update",
+                        "data.entity.delete",
+                    ],
+                }
+            },
+            guard: { enabled: true }
         },
         data: em({
             todos: entity("todos", {
@@ -18,5 +33,5 @@ export default {
             })
         })
     },
-    connection: { url: "file:data.db" },
+    connection: { url: "data.db" },
 } satisfies NextjsBkndConfig;

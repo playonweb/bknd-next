@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ClientProvider as BkndProvider } from "bknd/client";
+import { AuthGuard } from '@/components/AuthGuard';
 
 export const metadata: Metadata = {
   title: 'Neu ToDo App',
@@ -13,10 +14,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <BkndProvider>
-          {children}
+          <AuthGuard>
+            {children}
+          </AuthGuard>
         </BkndProvider>
       </body>
     </html>
