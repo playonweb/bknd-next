@@ -1,89 +1,51 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { useApi, useAuth } from 'bknd/client';
+import { useAuth, useEntityQuery } from 'bknd/client';
 import { Todo } from '@/lib/types';
 import { TodoItem } from '@/components/TodoItem';
 import { TodoInput } from '@/components/TodoInput';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  
-  const bknd = useApi();
+  const router = useRouter();
   const { user, logout } = useAuth();
+  const { data: todosData, isLoading, create, update, _delete } = useEntityQuery("todos");
+  
+  const todos = todosData || [];
 
-  useEffect(() => {
-    setIsMounted(true);
-    const fetchTodos = async () => {
-      setIsLoading(true);
-      try {
-        const response = await bknd.data.readMany<any>('todos');
-        if (response && response.ok) {
-          setTodos(response.data || []);
-        } else {
-          setTodos([]);
-        }
-      } catch (error: any) {
-        setTodos([]);
-        if (error.status === 401 || error.status === 403) {
-           console.log('User not authorized or authenticated');
-        } else {
-           console.warn('Error fetching todos:', error);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchTodos();
-  }, [bknd]);
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = '/login';
+  };
 
   const addTodo = async (title: string) => {
-    const tempId = Date.now().toString();
-    const todo: Todo = { id: tempId, title, completed: false };
-    
-    setTodos((prev) => [...prev, todo]);
-
     try {
-      const res = await bknd.data.createOne<any>('todos', { 
-        title: todo.title, 
-        completed: false 
-      });
-      
-      if (res && res.data?.id) {
-        setTodos((prev) => prev.map(t => t.id === tempId ? { ...t, id: res.data.id } : t));
-      }
+      // @ts-expect-error relation added dynamically
+      await create({ title, completed: false, users: user?.id as number });
     } catch (err) {
       console.error('Failed to create todo in bknd:', err);
     }
   };
 
   const toggleTodo = async (todo: Todo) => {
-    const updatedStatus = !todo.completed;
-    setTodos((prev) => prev.map(t => t.id === todo.id ? { ...t, completed: updatedStatus } : t));
-    
     try {
-      await bknd.data.updateOne('todos', todo.id, { 
-        completed: updatedStatus 
-      });
+      await update({ completed: !todo.completed }, todo.id);
     } catch (err) {
       console.error('Failed to update todo in bknd', err);
-      // Revert if error
-      setTodos((prev) => prev.map(t => t.id === todo.id ? { ...t, completed: todo.completed } : t));
     }
   };
 
-  const deleteTodo = async (id: string) => {
-    setTodos((prev) => prev.filter(t => t.id !== id));
-    
+  const deleteTodo = async (id: number) => {
     try {
-      await bknd.data.deleteOne('todos', id);
+      await _delete(id);
     } catch (err) {
       console.error('Failed to delete todo in bknd', err);
     }
   };
 
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
   if (!isMounted) return null;
 
   return (
@@ -95,7 +57,7 @@ export default function Home() {
               Neu ToDo
             </h1>
             <button 
-              onClick={() => logout()}
+              onClick={handleLogout}
               className="neu-flat rounded-xl px-4 py-2 text-sm font-bold text-red-500 hover:text-red-600 transition-all hover:scale-105 active:scale-95 active:neu-pressed"
             >
               Logout

@@ -3,7 +3,7 @@ import { Todo } from '@/lib/types';
 interface TodoItemProps {
   todo: Todo;
   onToggle: (todo: Todo) => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
 }
 
 export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
