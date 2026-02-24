@@ -8,8 +8,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, verified } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [isReady, setIsReady] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -17,6 +17,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!mounted) return;
+
+    setIsRedirecting(false);
 
     // Public paths that don't require auth
     const publicPaths = ['/login', '/signup'];
@@ -29,23 +31,30 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
     if (verified) {
       if (isPublicPath) {
-        router.push('/');
+        setIsRedirecting(true);
+        router.replace('/');
       } else if (isAdminPath && user?.role !== 'admin') {
-        router.push('/');
-      } else {
-        setIsReady(true);
+        setIsRedirecting(true);
+        router.replace('/');
       }
     } else {
       // Not logged in
       if (!isPublicPath) {
-        router.push('/login');
-      } else {
-        setIsReady(true);
+        setIsRedirecting(true);
+        router.replace('/login');
       }
     }
   }, [user, verified, pathname, router, mounted]);
 
-  if (!mounted || !isReady) {
+  const publicPaths = ['/login', '/signup'];
+  const isPublicPath = publicPaths.includes(pathname);
+  const isAdminPath = pathname.startsWith('/admin');
+  const isAuthenticated = verified === true;
+  const canAccessPath = isPublicPath
+    ? !isAuthenticated
+    : isAuthenticated && (!isAdminPath || user?.role === 'admin');
+
+  if (!mounted || verified === undefined || isRedirecting || !canAccessPath) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#e0e5ec]">
         <div className="text-[#4a5568] opacity-60 font-medium animate-pulse">
