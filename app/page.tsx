@@ -66,7 +66,7 @@ export default function Home() {
 
           <div className="flex items-center gap-3 px-2 py-1 bg-white/10 rounded-2xl">
             <div className="w-10 h-10 rounded-full neu-flat flex items-center justify-center text-lg font-bold text-[#4a5568]">
-              {user?.email?.[0].toUpperCase()}
+              {user?.email?.[0]?.toUpperCase() || '?'}
             </div>
             <div className="flex flex-col">
               <span className="text-xs font-bold uppercase tracking-wider opacity-40 text-[#4a5568]">Logged in as</span>

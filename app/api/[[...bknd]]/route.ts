@@ -13,6 +13,7 @@ const handler = serve({
             (app: App) => ({
                 name: "setup-admin",
                 onBoot: async () => {
+                    // Hot reload triggered 
                     console.log('[Init] Running setup-admin plugin onBoot...');
                     const adminEmail = process.env.ADMIN_EMAIL || 'admin@admin.com';
                     const adminPassword = process.env.ADMIN_PASSWORD || 'Password123!';
